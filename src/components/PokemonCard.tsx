@@ -75,6 +75,7 @@ const Card = styled.div`
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.05), 0 0px 40px rgba(0, 0, 0, 0.08);
   text-transform: capitalize;
   margin-top: 20px;
+  margin-bottom: 3rem;
 
   @media (max-width: 1024px) {
     width: 50vw;
