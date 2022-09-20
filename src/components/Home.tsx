@@ -73,6 +73,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-bottom: 3rem;
 
   > h1 {
     font-size: 3rem;
