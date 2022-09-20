@@ -50,9 +50,10 @@ const Card = styled.div`
   }
 
   @media (max-width: 1024px) {
-    width: 40vw;
+    width: 30vw;
   }
   @media (max-width: 768px) {
-    width: 90vw;
+    width: 40vw;
+    font-size: 1.5rem;
   }
 `;
