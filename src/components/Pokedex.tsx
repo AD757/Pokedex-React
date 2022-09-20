@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { PokedexInterface, PokemonCardProps } from "../api/types";
 
@@ -16,12 +17,14 @@ export const Pokedex = ({ url }: PokemonCardProps) => {
 
   if (pokemon?.sprites.front_default) {
     return (
-      <Card>
-        <img src={pokemon?.sprites.front_default} />
-        <p>
-          {pokemon?.name} #{pokemon?.id}
-        </p>
-      </Card>
+      <Link to={pokemon?.name ?? pokemon?.id}>
+        <Card>
+          <img src={pokemon?.sprites.front_default} />
+          <p>
+            {pokemon?.name} #{pokemon?.id}
+          </p>
+        </Card>
+      </Link>
     );
   }
 
@@ -29,6 +32,7 @@ export const Pokedex = ({ url }: PokemonCardProps) => {
 };
 
 const Card = styled.div`
+  cursor: pointer;
   display: inline-block;
   text-align: center;
   color: #fff;
