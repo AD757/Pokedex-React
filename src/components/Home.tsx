@@ -139,7 +139,7 @@ const SearchForm = styled.form`
 
       @media (max-width: 768px) {
         font-size: 1.4rem;
-        width: 25vh;
+        width: 40vh;
       }
     }
   }
@@ -158,11 +158,20 @@ const PokemonContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 3rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 const StyledButton = styled.button`
   display: flex;
   justify-content: center;
+  color: black;
   background-color: white;
   cursor: pointer;
   margin-top: 3rem;
