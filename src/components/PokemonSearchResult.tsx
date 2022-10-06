@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 
 import client from "../api/pokemonAPIClient";
@@ -11,6 +11,7 @@ import { PokemonCard } from "./PokemonCard";
 export const PokemonSearchResult: React.FC = () => {
   const [pokemons, setPokemons] = useState<ApiResponse | null>();
   const { pokemonName } = useParams<RouteParam>();
+  const history = useHistory();
 
   useEffect(() => {
     client.get<ApiResponse>(pokemonName).then(async (response) => {
@@ -21,9 +22,9 @@ export const PokemonSearchResult: React.FC = () => {
   return (
     <Container>
       <Header>
-        <Link to="/">
+        <BackButton onClick={() => history.goBack()}>
           <img src={BackIcon} alt="Back button" width="48px" height="48px" />
-        </Link>
+        </BackButton>
       </Header>
       {!pokemons ? (
         <Loading>
@@ -46,6 +47,10 @@ const Container = styled.div`
   height: 100vh;
   align-items: center;
   overflow-y: auto;
+`;
+
+const BackButton = styled.button`
+  background-color: transparent;
 `;
 
 const Header = styled.header`

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
@@ -6,6 +5,7 @@ import PokemonLogo from "../assets/pokemon-logo.png";
 import { Pokedex } from "./Pokedex";
 import { PokedexInterface } from "../api/types";
 import LoadingIcon from "../assets/loading.png";
+import client from "../api/pokemonAPIClient";
 
 export const Home = () => {
   const [search, setSearch] = useState("");
@@ -13,14 +13,16 @@ export const Home = () => {
   const [pokemonList, setPokemonList] = useState<PokedexInterface | null>(null);
   const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+
   const limit = 20;
 
-  const POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}"`;
+  const POKEDEX_URL = `?limit=${limit}&offset=${offset}`;
 
   useEffect(() => {
     setIsLoading(false);
-    axios.get(POKEDEX_URL).then((response) => {
+    client.get(POKEDEX_URL).then((response) => {
       setPokemonList(response.data);
+      history.push(POKEDEX_URL);
     });
   }, [offset]);
 
@@ -58,13 +60,25 @@ export const Home = () => {
           <img src={LoadingIcon} alt="loading icon" />
         </Loading>
       ) : null}
-      <StyledButton
-        onClick={() => {
-          setOffset(offset + limit);
-        }}
-      >
-        Load more Pokémons
-      </StyledButton>
+
+      <ButtonContainer>
+        <StyledButton
+          onClick={() => {
+            setOffset(offset - limit);
+          }}
+          disabled={offset === 0}
+        >
+          Prev
+        </StyledButton>
+
+        <StyledButton
+          onClick={() => {
+            setOffset(offset + limit);
+          }}
+        >
+          Next
+        </StyledButton>
+      </ButtonContainer>
     </Container>
   );
 };
@@ -168,11 +182,17 @@ const PokemonContainer = styled.div`
   }
 `;
 
+const ButtonContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const StyledButton = styled.button`
   display: flex;
   justify-content: center;
   color: black;
   background-color: white;
+  margin: 0 10px;
   cursor: pointer;
   margin-top: 3rem;
   padding: 12px;
@@ -181,6 +201,9 @@ const StyledButton = styled.button`
   font-weight: bold;
   &:hover {
     transform: scale(1.1);
+  }
+  &:disabled {
+    cursor: not-allowed;
   }
 `;
 

@@ -2,15 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import client from "../api/pokemonAPIClient";
 import { PokedexInterface, PokemonCardProps } from "../api/types";
 
 export const Pokedex = ({ url }: PokemonCardProps) => {
   const [pokemon, setPokemon] = useState<PokedexInterface | null>(null);
 
-  const POKEDEX_URL = `https://pokeapi.co/api/v2/pokemon/${url}`;
+  const POKEDEX_URL = `${url}`;
 
   useEffect(() => {
-    axios.get(POKEDEX_URL).then((response) => {
+    client.get(POKEDEX_URL).then((response) => {
       setPokemon(response.data);
     });
   }, []);
