@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import client from "../api/pokemonAPIClient";
 import styled from "styled-components";
 import PokemonLogo from "../assets/pokemon-logo.png";
 import { Pokedex } from "./Pokedex";
 import { PokedexInterface } from "../api/types";
 import LoadingIcon from "../assets/loading.png";
-import client from "../api/pokemonAPIClient";
 
 export const Home = () => {
   const [search, setSearch] = useState("");
@@ -195,12 +195,12 @@ const StyledButton = styled.button`
   margin: 0 10px;
   cursor: pointer;
   margin-top: 3rem;
-  padding: 12px;
-  border-radius: 24px;
+  padding: 8px 16px;
   font-size: 1.5rem;
   font-weight: bold;
   &:hover {
-    transform: scale(1.1);
+    background-color: #ddd;
+    color: black;
   }
   &:disabled {
     cursor: not-allowed;

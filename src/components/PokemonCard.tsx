@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import styled from "styled-components";
 import client from "../api/pokemonAPIClient";
+import styled from "styled-components";
 import { ApiResponse, RouteParam, Precentage } from "../api/types";
 
 const iterate = (array: any[], key: string) => {

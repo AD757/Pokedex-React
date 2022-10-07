@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
 import client from "../api/pokemonAPIClient";
+import styled from "styled-components";
 import { PokedexInterface, PokemonCardProps } from "../api/types";
 
 export const Pokedex = ({ url }: PokemonCardProps) => {
@@ -16,20 +15,20 @@ export const Pokedex = ({ url }: PokemonCardProps) => {
     });
   }, []);
 
-  if (pokemon?.sprites.front_default) {
-    return (
-      <Link to={pokemon?.name ?? pokemon?.id}>
-        <Card>
-          <img src={pokemon?.sprites.front_default} />
-          <p>
-            {pokemon?.name} #{pokemon?.id}
-          </p>
-        </Card>
-      </Link>
-    );
-  }
-
-  return <></>;
+  return (
+    <>
+      {pokemon?.sprites.front_default && (
+        <Link to={pokemon?.name ?? pokemon?.id}>
+          <Card>
+            <img src={pokemon?.sprites.front_default} />
+            <p>
+              {pokemon?.name} #{pokemon?.id}
+            </p>
+          </Card>
+        </Link>
+      )}
+    </>
+  );
 };
 
 const Card = styled.div`
