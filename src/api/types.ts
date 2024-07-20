@@ -5,10 +5,11 @@ export interface PokemonCardProps {
 export interface PokedexInterface {
   id: number;
   name: string;
+  count: number;
   sprites: {
     front_default: string | null;
   };
-  results: Pokemon[];
+  results: Array<{ name: string; url: string }>;
 }
 
 export interface Pokemon {
