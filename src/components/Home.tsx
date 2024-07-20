@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import client from "../api/pokemonAPIClient";
 import styled from "styled-components";
 import PokemonLogo from "../assets/pokemon-logo.png";
@@ -10,19 +10,23 @@ import LoadingIcon from "../assets/loading.png";
 export const Home = () => {
   const [search, setSearch] = useState("");
   const history = useHistory();
+  const location = useLocation();
   const [pokemonList, setPokemonList] = useState<PokedexInterface | null>(null);
-  const [offset, setOffset] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   const limit = 20;
 
+  const queryParams = new URLSearchParams(location.search);
+  const currentPage = parseInt(queryParams.get("page") || "1", 10);
+  const offset = (currentPage - 1) * limit;
+
   const POKEDEX_URL = `?limit=${limit}&offset=${offset}`;
 
   useEffect(() => {
-    setIsLoading(false);
-    client.get(POKEDEX_URL).then((response) => {
+    setIsLoading(true);
+    client.get<PokedexInterface>(POKEDEX_URL).then((response) => {
       setPokemonList(response.data);
-      history.push(POKEDEX_URL);
+      setIsLoading(false);
     });
   }, [offset]);
 
@@ -30,6 +34,12 @@ export const Home = () => {
     event.preventDefault();
     history.push(`/${search.toLowerCase().trim()}`);
   };
+
+  const handlePageChange = (newPage: number) => {
+    history.push(`?page=${newPage}`);
+  };
+
+  const totalPages = Math.ceil((pokemonList?.count || 0) / limit);
 
   return (
     <Container>
@@ -50,33 +60,42 @@ export const Home = () => {
       <Heading>
         <p>Pokémon list</p>
       </Heading>
-      <PokemonContainer>
-        {pokemonList?.results.map((i) => {
-          return <Pokedex key={i.name} url={i.name} />;
-        })}
-      </PokemonContainer>
-      {isLoading === true ? (
+      {isLoading ? (
         <Loading>
           <img src={LoadingIcon} alt="loading icon" />
         </Loading>
-      ) : null}
-
+      ) : (
+        <PokemonContainer>
+          {pokemonList?.results.map((i) => {
+            return <Pokedex key={i.name} url={i.name} />;
+          })}
+        </PokemonContainer>
+      )}
       <ButtonContainer>
         <StyledButton
-          onClick={() => {
-            setOffset(offset - limit);
-          }}
-          disabled={offset === 0}
+          onClick={() => handlePageChange(1)}
+          disabled={currentPage === 1}
+        >
+          First
+        </StyledButton>
+        <StyledButton
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
         >
           Prev
         </StyledButton>
-
+        <PageNumber>{currentPage}</PageNumber>
         <StyledButton
-          onClick={() => {
-            setOffset(offset + limit);
-          }}
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
         >
           Next
+        </StyledButton>
+        <StyledButton
+          onClick={() => handlePageChange(totalPages)}
+          disabled={currentPage === totalPages}
+        >
+          Last
         </StyledButton>
       </ButtonContainer>
     </Container>
@@ -185,6 +204,8 @@ const PokemonContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
+  margin-top: 3rem;
 `;
 
 const StyledButton = styled.button`
@@ -194,10 +215,10 @@ const StyledButton = styled.button`
   background-color: white;
   margin: 0 10px;
   cursor: pointer;
-  margin-top: 3rem;
   padding: 8px 16px;
   font-size: 1.5rem;
   font-weight: bold;
+  border-radius: 12px;
   &:hover {
     background-color: #ddd;
     color: black;
@@ -205,6 +226,20 @@ const StyledButton = styled.button`
   &:disabled {
     cursor: not-allowed;
   }
+`;
+
+const PageNumber = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  background-color: #fff;
+  color: #24292e;
+  padding: 8px 16px;
+  border-radius: 12px;
 `;
 
 const Loading = styled.div`
